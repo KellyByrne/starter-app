@@ -16,12 +16,12 @@ import asyncComponent from "util/asyncComponent";
 import Login from './Login';
 import Register from './Register';
 
-// const PrivateRoute = ({ component: Component, ...rest }) => 
-//     <Route {...rest} render={props => (
-//         localStorage.getItem('user')
-//             ? <Component {...props} />
-//             : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-//     )} />;
+const PrivateRoute = ({ component: Component, ...rest }) => 
+    <Route {...rest} render={props => (
+        localStorage.getItem('user')
+            ? <Component {...props} />
+            : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+    )} />;
 
 
 class App extends Component {
@@ -30,21 +30,22 @@ class App extends Component {
         super(props);
 
         const { dispatch } = this.props;
-        this.props.history.listen((location, action) => {
-            // clear alert on location change
-            dispatch(alertActions.clear());
-        });
+        // this.props.history.listen((location, action) => {
+        //     // clear alert on location change
+        //     dispatch(alertActions.clear());
+        // });
     }
 
     render() {
+        console.log(this.props.authentication.user);
         const {match, location, locale, authentication, initURL, isDirectionRTL} = this.props;
         if (location.pathname === '/') {
             if (authentication.user === null) {
                 return ( <Redirect to={'/login'}/> );
-            } else if (initURL === '' || initURL === '/' || initURL === '/login') {
+            } else if (location.pathname === '/' && authentication.user !== null) {
                 return ( <Redirect to={'/app/sample-page'}/> );
             } else {
-                return ( <Redirect to={initURL}/> );
+                return ( <Redirect to={location.pathname}/> );
             }
         }
 
@@ -62,11 +63,9 @@ class App extends Component {
                 messages={currentAppLocale.messages}
             >
                 <div className="app-main">
-                    {alert.message &&
-                            <div className={`alert ${alert.type}`}>{alert.message}</div>
-                        }
+                    <div className={`alert ${this.props.alert.type}`}>{this.props.alert.message}</div>
                     <Switch>
-                        <Route path={`${match.url}app`} component={MainApp}/>
+                        <PrivateRoute path={`${match.url}app`} component={MainApp}/>
                         <Route path='/login' component={Login}/>
                         <Route path='/register' component={Register}/>
                         <Route
