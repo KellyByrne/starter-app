@@ -6,8 +6,14 @@ import { userActions } from '../../actions';
 class UserInfo extends React.Component {
     logOut = () => {
         this.props.dispatch(userActions.logout()); 
-        console.log('logged out'); 
     } 
+
+    renderName = () => {
+        const {firstName, lastName}= this.props.user;
+          return (
+            <h4 className="user-name mb-0">{`${firstName} ${lastName}`}</h4>
+            );  
+    }
 
     render() {
         return (
@@ -16,7 +22,7 @@ class UserInfo extends React.Component {
                     <img className="user-avatar border-0 size-40" src="http://via.placeholder.com/150x150"
                          alt="User"/>
                         <div className="user-detail ml-2">
-                            <h4 className="user-name mb-0">Chris Harris</h4>
+                            {this.renderName()}
                             <small>Administrator</small>
                         </div>
                 </div>
