@@ -13,6 +13,8 @@ import {alertActions} from '../actions';
 
 import MainApp from 'app/index';
 import asyncComponent from "util/asyncComponent";
+import Login from './Login';
+import Register from './Register';
 
 // const PrivateRoute = ({ component: Component, ...rest }) => 
 //     <Route {...rest} render={props => (
@@ -35,9 +37,15 @@ class App extends Component {
     }
 
     render() {
-        const {match, location, locale, isDirectionRTL, alert} = this.props;
+        const {match, location, locale, authentication, initURL, isDirectionRTL} = this.props;
         if (location.pathname === '/') {
-            return ( <Redirect to={'/app/sample-page'}/> );
+            if (authentication.user === null) {
+                return ( <Redirect to={'/login'}/> );
+            } else if (initURL === '' || initURL === '/' || initURL === '/login') {
+                return ( <Redirect to={'/app/sample-page'}/> );
+            } else {
+                return ( <Redirect to={initURL}/> );
+            }
         }
 
         // for RTL Support
@@ -59,6 +67,8 @@ class App extends Component {
                         }
                     <Switch>
                         <Route path={`${match.url}app`} component={MainApp}/>
+                        <Route path='/login' component={Login}/>
+                        <Route path='/register' component={Register}/>
                         <Route
                             component={asyncComponent(() => import('components/Error404'))}/>
                     </Switch>
@@ -70,8 +80,9 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
     const {alert} = state;
+    const {authentication} = state;
     const {locale, isDirectionRTL} = state.settings;
-    return {locale, isDirectionRTL, alert}
+    return {locale, isDirectionRTL, alert, authentication}
 };
 
 export default connect(mapStateToProps)(App);
