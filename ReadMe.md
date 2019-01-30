@@ -1,3 +1,6 @@
+yarn install
+yarn start
+
 #### For change theme color
 ######update app color 
 open src/style/global/_variable.scss
