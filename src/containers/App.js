@@ -30,14 +30,19 @@ class App extends Component {
         super(props);
 
         const { dispatch } = this.props;
-        // this.props.history.listen((location, action) => {
-        //     // clear alert on location change
-        //     dispatch(alertActions.clear());
-        // });
+        this.props.history.listen((location, action) => {
+            // clear alert on location change
+            dispatch(alertActions.clear());
+        });
+    }
+
+    renderAlert = () => {
+        if (this.props.alert.message) {
+            return <div className={`alert ${this.props.alert.type}`}>{this.props.alert.message}</div>
+        }
     }
 
     render() {
-        console.log(this.props.authentication.user);
         const {match, location, locale, authentication, initURL, isDirectionRTL} = this.props;
         if (location.pathname === '/') {
             if (authentication.user === null) {
@@ -48,6 +53,7 @@ class App extends Component {
                 return ( <Redirect to={location.pathname}/> );
             }
         }
+
 
         // for RTL Support
         if (isDirectionRTL) {
@@ -63,7 +69,7 @@ class App extends Component {
                 messages={currentAppLocale.messages}
             >
                 <div className="app-main">
-                    <div className={`alert ${this.props.alert.type}`}>{this.props.alert.message}</div>
+                    {this.renderAlert()}
                     <Switch>
                         <PrivateRoute path={`${match.url}app`} component={MainApp}/>
                         <Route path='/login' component={Login}/>
