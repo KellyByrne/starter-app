@@ -39,6 +39,7 @@
   max-width: 680px;
   width: 94%;
   margin: 0 auto;
+  flex-direction:column;
 
   & .loader-view {
     position: absolute;

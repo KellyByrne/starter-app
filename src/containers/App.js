@@ -36,13 +36,9 @@ class App extends Component {
         });
     }
 
-    renderAlert = () => {
-        if (this.props.alert.message) {
-            return <div className={`alert ${this.props.alert.type}`}>{this.props.alert.message}</div>
-        }
-    }
 
     render() {
+        console.log(Object.keys(this.props.alert).length);
         const {match, location, locale, authentication, initURL, isDirectionRTL} = this.props;
         if (location.pathname === '/') {
             if (authentication.user === null) {
@@ -67,9 +63,8 @@ class App extends Component {
             <IntlProvider
                 locale={currentAppLocale.locale}
                 messages={currentAppLocale.messages}
-            >
+            >   
                 <div className="app-main">
-                    {this.renderAlert()}
                     <Switch>
                         <PrivateRoute path={`${match.url}app`} component={MainApp}/>
                         <Route path='/login' component={Login}/>
