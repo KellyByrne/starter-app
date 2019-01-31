@@ -2,7 +2,6 @@ import React from 'react';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-
 import { userActions } from '../actions';
 
 class RegisterPage extends React.Component {
@@ -46,11 +45,20 @@ class RegisterPage extends React.Component {
         }
     }
 
+    renderAlert = () => {
+        if (Object.keys(this.props.alert).length > 0) {
+           return (
+                <div class="border alert alert-danger fade show d-flex align-items-center justify-content-center" role="alert">{this.props.alert.message}</div>
+             );  
+        }
+     }
+
     render() {
         const { registering  } = this.props;
         const { user, submitted } = this.state;
         return (
             <div  className="app-login-container d-flex justify-content-center align-items-center animated slideInUpTiny animation-duration-3">
+                {this.renderAlert()}
                 <div className="app-login-main-content">
                     <div className="app-logo-content d-flex align-items-center justify-content-center">
                         <Link className="logo-lg" to="/" title="Jambo">
@@ -69,32 +77,32 @@ class RegisterPage extends React.Component {
 
                         <div className="app-login-form">
                             <form name="form" onSubmit={this.handleSubmit}>
-                                <div className={'form-group mb-3' + (submitted && !user.firstName ? ' has-error' : '')}>
+                                <div className="form-group mb-3">
                                     <label htmlFor="firstName">First Name</label>
-                                    <input type="text" className="form-control form-control-lg" name="firstName" value={user.firstName} onChange={this.handleChange} />
+                                    <input type="text" className={'form-control form-control-lg' + (submitted && !user.firstName ? ' is-invalid' : '')} name="firstName" value={user.firstName} onChange={this.handleChange} />
                                     {submitted && !user.firstName &&
-                                        <div className="help-block">First Name is required</div>
+                                        <div className="invalid-feedback">First Name is Required</div>
                                     }
                                 </div>
-                                <div className={'form-group mb-3' + (submitted && !user.lastName ? ' has-error' : '')}>
+                                <div className="form-group mb-3">
                                     <label htmlFor="lastName">Last Name</label>
-                                    <input type="text" className="form-control form-control-lg" name="lastName" value={user.lastName} onChange={this.handleChange} />
+                                    <input type="text" className={'form-control form-control-lg' + (submitted && !user.lastName ? ' is-invalid' : '')} name="lastName" value={user.lastName} onChange={this.handleChange} />
                                     {submitted && !user.lastName &&
-                                        <div className="help-block">Last Name is required</div>
+                                        <div className="invalid-feedback">Last Name is Required</div>
                                     }
                                 </div>
-                                <div className={'form-group mb-3' + (submitted && !user.username ? ' has-error' : '')}>
+                                <div className="form-group mb-3" >
                                     <label htmlFor="username">Username</label>
-                                    <input type="text" className="form-control form-control-lg" name="username" value={user.username} onChange={this.handleChange} />
+                                    <input type="text" className={'form-control form-control-lg' + (submitted && !user.username ? ' is-invalid' : '')} name="username" value={user.username} onChange={this.handleChange} />
                                     {submitted && !user.username &&
-                                        <div className="help-block">Username is required</div>
+                                        <div className="invalid-feedback">Username is Required</div>
                                     }
                                 </div>
-                                <div className={'form-group mb-3' + (submitted && !user.password ? ' has-error' : '')}>
+                                <div className="form-group mb-3">
                                     <label htmlFor="password">Password</label>
-                                    <input type="password" className="form-control form-control-lg" name="password" value={user.password} onChange={this.handleChange} />
+                                    <input type="password" className={'form-control form-control-lg' + (submitted && !user.password ? ' is-invalid' : '')} name="password" value={user.password} onChange={this.handleChange} />
                                     {submitted && !user.password &&
-                                        <div className="help-block">Password is required</div>
+                                        <div className="invalid-feedback">Password is Required</div>
                                     }
                                 </div>
                                 <div className="mb-3 d-flex align-items-center justify-content-between">
@@ -115,8 +123,10 @@ class RegisterPage extends React.Component {
 
 function mapStateToProps(state) {
     const { registering } = state.registration;
+    const {alert} = state;
     return {
-        registering
+        registering,
+        alert
     };
 }
 
